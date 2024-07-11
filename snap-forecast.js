@@ -184,9 +184,9 @@ class SnapForecast extends HTMLElement {
           }
           .cta {
             font-family: sans-serif;
-            color: #050505;
+            color: #4980EC;
             text-decoration: none;
-            background-color: #53FF83;
+            background-color: #FFF;
             padding: 20px 40px;
             width: 300px;
             text-align: center;
