@@ -436,7 +436,7 @@ class SnapForecast extends HTMLElement {
               <div class="scroll-overlay">- scroll for more options -</div>
             </div>
           </div>
-          <a href="${this.ctaUrl}" class="cta">
+          <a href="${this.ctaUrl}" target="_blank" class="cta">
             Start Your Fundraiser
           </a>
         </div>
