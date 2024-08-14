@@ -49,8 +49,16 @@ class SnapForecast extends HTMLElement {
     style.classList.add('raise-forecast');
     style.textContent = `
           :host {
-              display: block;
-              font-family: "Inter", sans-serif;
+            padding: 0px;
+            margin: 0;
+            display: block;
+            font-family: "Inter", sans-serif;
+          }
+          .raise-forecast {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            width: 100%;
           }
           .banner {
             display: flex;
@@ -359,15 +367,16 @@ class SnapForecast extends HTMLElement {
           .cta {
             font-family: sans-serif;
             color: #4980EC;
+            display: block;
             text-decoration: none;
             background-color: #FFF;
             padding: 20px 40px;
-            width: 300px;
+            max-width: 300px;
             text-align: center;
             font-size: 25px;
             font-weight: 900;
             border-radius: 80px;
-            margin: 0px auto;
+            margin: auto;
           }
           @media (max-width: 1500px) {
             .banner.horizontal .cta {
@@ -383,6 +392,26 @@ class SnapForecast extends HTMLElement {
             .banner.horizontal .intro > h2 {
               font-size: 20px;
             }
+          }
+          .banner.mini {
+            gap: 0px;
+          }
+          .banner.mini .logo-header img {
+            height: 20px;
+            width: 150px;
+          }
+          .banner.mini .intro h2 {
+            font-size: 20px;
+          }
+          .banner.mini .intro p {
+            font-size: 12px;
+          }
+          .banner.mini .cta {
+            font-size: 20px;
+            padding: 15px 30px;
+          }
+          .banner.mini .modal {
+            margin-top: -130px;
           }
       `;
 
@@ -478,6 +507,35 @@ class SnapForecast extends HTMLElement {
     this.controls.state.addEventListener('click', this.changeView(this.views, 'states'));
     this.controls.program.addEventListener('click', this.changeView(this.views, 'programs'));
     this.inputs.participant.addEventListener('input', this.selectParticipants(this.inputs, this.controls, this.animationFrame));
+
+    const resizeObserver = new ResizeObserver(entries => {
+      entries.forEach(entry => {
+        const width = container.clientWidth
+        const modal = this.shadowRoot.querySelector('.banner .modal');
+        const banner = this.shadowRoot.querySelector('.banner');
+        const cta = this.shadowRoot.querySelector('.banner .cta');
+        if (width <= 465 && width > 0) {
+          const scalePadding = Math.round(((width / 465) * 40) * 100) / 100;
+          const scaleM = Math.round((width / 400) * 85) / 100;
+          let scaleP;
+          if (width <= 200) {
+            scaleP = 130
+          } else {
+            scaleP = 130 * ((465 - width) / 265)
+          }
+          banner.classList.add('mini')
+          banner.style.padding = `${scalePadding}px`;
+          modal.style.transform = `scale(${scaleM})`;
+          modal.style.marginTop = `-${scaleP}px`;
+          cta.style.marginTop = `-${scaleP - 15}px`;
+        } else {
+          banner.classList.remove('mini')
+          banner.style.padding = '40px';
+          modal.style.transform = '';
+        }
+      })
+    });
+    resizeObserver.observe(container);
   }
 
   selectParticipants(inputs, controls, animationFrame) {
